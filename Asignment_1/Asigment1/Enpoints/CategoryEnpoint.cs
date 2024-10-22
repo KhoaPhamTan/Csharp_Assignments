@@ -14,14 +14,14 @@ namespace Asigment1.EndPoints
 
         public static void MapCategoryEndpoints(this WebApplication app)
         {
-          
-            app.MapGet("/categories", () => 
+
+            app.MapGet("/categories", () =>
             {
                 var categoryDtos = categories.Select(c => new CategoryDto(c.Id, c.Name, c.Price));
                 return Results.Ok(categoryDtos);
             });
 
-        
+
             app.MapGet("/categories/{id}", (int id) =>
             {
                 var category = categories.FirstOrDefault(c => c.Id == id);
@@ -36,6 +36,15 @@ namespace Asigment1.EndPoints
 
             app.MapPost("/categories", (CategoryDto categoryDto) =>
             {
+                if (string.IsNullOrWhiteSpace(categoryDto.Name))
+                {
+                    return Results.BadRequest(new { Message = "Name is a required field." });
+                }
+
+                if (categoryDto.Price <= 0)
+                {
+                    return Results.BadRequest(new { Message = "Price must be a positive number." });
+                }
                 var newCategory = new CategoryEntity
                 {
                     Id = categories.Count + 1,
@@ -46,13 +55,22 @@ namespace Asigment1.EndPoints
                 return Results.Created($"/categories/{newCategory.Id}", newCategory);
             });
 
-        
+
             app.MapPut("/categories/{id}", (int id, CategoryDto categoryDto) =>
             {
                 var category = categories.FirstOrDefault(c => c.Id == id);
                 if (category == null)
                 {
-                    return Results.NotFound();
+                    return Results.NotFound(new {Message = "Cannot found that category ID in DB"} );
+                }
+                if (string.IsNullOrWhiteSpace(categoryDto.Name))
+                {
+                    return Results.BadRequest(new { Message = "Name is a required field." });
+                }
+
+                if (categoryDto.Price <= 0)
+                {
+                    return Results.BadRequest(new { Message = "Price must be a positive number." });
                 }
 
                 category.Name = categoryDto.Name;
@@ -61,7 +79,7 @@ namespace Asigment1.EndPoints
                 return Results.NoContent();
             });
 
-      
+
             app.MapDelete("/categories/{id}", (int id) =>
             {
                 var category = categories.FirstOrDefault(c => c.Id == id);
