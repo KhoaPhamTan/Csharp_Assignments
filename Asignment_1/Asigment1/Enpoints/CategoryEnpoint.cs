@@ -14,7 +14,7 @@ namespace Asigment1.EndPoints
 
         public static void MapCategoryEndpoints(this WebApplication app)
         {
-          //test GIt . 
+          //test GIt .. ... .. test ... update 3
             app.MapGet("/categories", () => 
             {
                 var categoryDtos = categories.Select(c => new CategoryDto(c.Id, c.Name, c.Price));
