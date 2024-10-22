@@ -7,9 +7,9 @@ namespace Asigment1.EndPoints
     {
         private static List<CategoryEntity> categories = new List<CategoryEntity>
         {
-            new CategoryEntity { Id = 1, Name = "Iphone", Price = 299.99m },
-            new CategoryEntity { Id = 2, Name = "Samsung", Price = 19.99m },
-            new CategoryEntity { Id = 3, Name = "Nokia", Price = 39.99m }
+            new CategoryEntity { Id = 1, Name = "Iphone", Price = 1999.99m },
+            new CategoryEntity { Id = 2, Name = "Samsung", Price = 1679.99m },
+            new CategoryEntity { Id = 3, Name = "Nokia", Price = 139.99m }
         };
 
         public static void MapCategoryEndpoints(this WebApplication app)
