@@ -20,7 +20,7 @@ namespace Asigment1.EndPoints
             app.MapGet("/categories/{id}", async (int id, CategoryContext db) =>
             {
                 var category = await db.Categories.FindAsync(id);
-                if (category == null) return Results.NotFound({});
+                if (category == null) return Results.NotFound(new { Message = "There is no records" });
 
                 var categoryDto = new CategoryDto(category.Id, category.Name, category.Price);
                 return Results.Ok(categoryDto);
@@ -28,6 +28,15 @@ namespace Asigment1.EndPoints
 
             app.MapPost("/categories", async (CategoryDto categoryDto, CategoryContext db) =>
             {
+                if (string.IsNullOrWhiteSpace(categoryDto.Name))
+                {
+                    return Results.BadRequest(new { Message = "Name is a required field." });
+                }
+
+                if (categoryDto.Price <= 0)
+                {
+                    return Results.BadRequest(new { Message = "Price must be a positive number." });
+                }
                 var newCategory = new CategoryEntity
                 {
                     Name = categoryDto.Name,
@@ -41,7 +50,19 @@ namespace Asigment1.EndPoints
             app.MapPut("/categories/{id}", async (int id, CategoryDto categoryDto, CategoryContext db) =>
             {
                 var category = await db.Categories.FindAsync(id);
-                if (category == null) return Results.NotFound();
+                if (category == null)
+                {
+                    return Results.NotFound(new { Message = "Cannot found that category ID in DB" });
+                }
+                if (string.IsNullOrWhiteSpace(categoryDto.Name))
+                {
+                    return Results.BadRequest(new { Message = "Name is a required field." });
+                }
+
+                if (categoryDto.Price <= 0)
+                {
+                    return Results.BadRequest(new { Message = "Price must be a positive number." });
+                }
 
                 category.Name = categoryDto.Name;
                 category.Price = categoryDto.Price;
