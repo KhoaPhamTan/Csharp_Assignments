@@ -14,8 +14,8 @@ POST  http://localhost:5113/categories
 Content-Type: application/json
 
 {
-    "name": "Iphone16",
-    "price": 1999.99
+    "name": "Nokia 8025",
+    "price": 50.99
 }
 
 ### missing field
@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE   http://localhost:5113/categories/1
+DELETE   http://localhost:5113/categories/3
 
 ###
 DELETE   http://localhost:5113/categories/211

@@ -1,76 +1,89 @@
+using Asigment1.Data;
 using Asigment1.DTOs;
 using Asigment1.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Asigment1.EndPoints
 {
     public static class CategoryEndPoints
     {
-        private static List<CategoryEntity> categories = new List<CategoryEntity>
-        {
-            new CategoryEntity { Id = 1, Name = "Iphone", Price = 1999.99m },
-            new CategoryEntity { Id = 2, Name = "Samsung", Price = 1679.99m },
-            new CategoryEntity { Id = 3, Name = "Nokia", Price = 139.99m }
-        };
-
         public static void MapCategoryEndpoints(this WebApplication app)
         {
-          //test GIt .. ... .. test ... update 3
-            app.MapGet("/categories", () => 
+            app.MapGet("/categories", async (CategoryContext db) =>
             {
-                var categoryDtos = categories.Select(c => new CategoryDto(c.Id, c.Name, c.Price));
+
+                var categoryDtos = await db.Categories
+                    .Select(c => new CategoryDto(c.Id, c.Name, c.Price))
+                    .ToListAsync();
+                if (!categoryDtos.Any())
+                {
+                    return Results.NotFound(new { Message = "No records found." });
+                }
+
                 return Results.Ok(categoryDtos);
             });
 
-        
-            app.MapGet("/categories/{id}", (int id) =>
+            app.MapGet("/categories/{id}", async (int id, CategoryContext db) =>
             {
-                var category = categories.FirstOrDefault(c => c.Id == id);
-                if (category == null)
-                {
-                    return Results.NotFound();
-                }
+                var category = await db.Categories.FindAsync(id);
+                if (category == null) return Results.NotFound(new { Message = "No records found." });
 
                 var categoryDto = new CategoryDto(category.Id, category.Name, category.Price);
                 return Results.Ok(categoryDto);
             });
 
-            app.MapPost("/categories", (CategoryDto categoryDto) =>
+            app.MapPost("/categories", async (CategoryDto categoryDto, CategoryContext db) =>
             {
+                if (string.IsNullOrWhiteSpace(categoryDto.Name))
+                {
+                    return Results.BadRequest(new { Message = "Name is a required field." });
+                }
+
+                if (categoryDto.Price <= 0)
+                {
+                    return Results.BadRequest(new { Message = "Price must be a positive number." });
+                }
+
                 var newCategory = new CategoryEntity
                 {
-                    Id = categories.Count + 1,
                     Name = categoryDto.Name,
                     Price = categoryDto.Price
                 };
-                categories.Add(newCategory);
+
+                db.Categories.Add(newCategory);
+                await db.SaveChangesAsync();
                 return Results.Created($"/categories/{newCategory.Id}", newCategory);
             });
 
-        
-            app.MapPut("/categories/{id}", (int id, CategoryDto categoryDto) =>
+            app.MapPut("/categories/{id}", async (int id, CategoryDto categoryDto, CategoryContext db) =>
             {
-                var category = categories.FirstOrDefault(c => c.Id == id);
-                if (category == null)
+                var category = await db.Categories.FindAsync(id);
+                if (category == null) return Results.NotFound(new { Message = "Category not found." });
+
+                if (string.IsNullOrWhiteSpace(categoryDto.Name))
                 {
-                    return Results.NotFound();
+                    return Results.BadRequest(new { Message = "Name is a required field." });
+                }
+
+                if (categoryDto.Price <= 0)
+                {
+                    return Results.BadRequest(new { Message = "Price must be a positive number." });
                 }
 
                 category.Name = categoryDto.Name;
                 category.Price = categoryDto.Price;
 
+                await db.SaveChangesAsync();
                 return Results.NoContent();
             });
 
-      
-            app.MapDelete("/categories/{id}", (int id) =>
+            app.MapDelete("/categories/{id}", async (int id, CategoryContext db) =>
             {
-                var category = categories.FirstOrDefault(c => c.Id == id);
-                if (category == null)
-                {
-                    return Results.NotFound();
-                }
+                var category = await db.Categories.FindAsync(id);
+                if (category == null) return Results.NotFound();
 
-                categories.Remove(category);
+                db.Categories.Remove(category);
+                await db.SaveChangesAsync();
                 return Results.NoContent();
             });
         }
