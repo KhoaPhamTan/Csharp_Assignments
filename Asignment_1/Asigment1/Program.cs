@@ -4,7 +4,7 @@ using Asigment1.EndPoints;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get the connection string from appsettings.json
-var connString = builder.Configuration.GetConnectionString("GameStore");
+var connString = builder.Configuration.GetConnectionString("PhoneStore");
 builder.Services.AddSqlite<CategoryContext>(connString);
 
 var app = builder.Build();
