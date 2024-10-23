@@ -1,24 +1,22 @@
 using Asigment1.Data;
 using Asigment1.EndPoints;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Thêm DbContext vào DI container
-builder.Services.AddDbContext<CategoryContext>(options =>
-    options.UseSqlite("Data Source=categories.db"));
+// Get the connection string from appsettings.json
+var connString = builder.Configuration.GetConnectionString("GameStore");
+builder.Services.AddSqlite<CategoryContext>(connString);
 
 var app = builder.Build();
 
-// Đăng ký các endpoint
-app.MapCategoryEndpoints();
-
-// Khởi tạo cơ sở dữ liệu nếu chưa tồn tại
+// Apply migrations asynchronously
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<CategoryContext>();
-    db.Database.EnsureCreated(); // Tạo cơ sở dữ liệu nếu chưa tồn tại
+    var dbContext = scope.ServiceProvider.GetRequiredService<CategoryContext>();
+    await dbContext.MigrateDbAsync(); // Call the async migration method
 }
 
-// Chạy ứng dụng
+// Map endpoints
+app.MapCategoryEndpoints();
+
 app.Run();

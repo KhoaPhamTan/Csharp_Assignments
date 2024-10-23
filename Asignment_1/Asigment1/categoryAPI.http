@@ -14,8 +14,8 @@ POST  http://localhost:5113/categories
 Content-Type: application/json
 
 {
-    "name": "Samsung",
-    "price": 1559.99
+    "name": "Nokia 8025",
+    "price": 50.99
 }
 
 ### missing field

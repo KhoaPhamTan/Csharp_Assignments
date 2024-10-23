@@ -11,16 +11,22 @@ namespace Asigment1.EndPoints
         {
             app.MapGet("/categories", async (CategoryContext db) =>
             {
+
                 var categoryDtos = await db.Categories
                     .Select(c => new CategoryDto(c.Id, c.Name, c.Price))
                     .ToListAsync();
+                if (!categoryDtos.Any())
+                {
+                    return Results.NotFound(new { Message = "No records found." });
+                }
+
                 return Results.Ok(categoryDtos);
             });
 
             app.MapGet("/categories/{id}", async (int id, CategoryContext db) =>
             {
                 var category = await db.Categories.FindAsync(id);
-                if (category == null) return Results.NotFound(new { Message = "There is no records" });
+                if (category == null) return Results.NotFound(new { Message = "No records found." });
 
                 var categoryDto = new CategoryDto(category.Id, category.Name, category.Price);
                 return Results.Ok(categoryDto);
@@ -37,11 +43,13 @@ namespace Asigment1.EndPoints
                 {
                     return Results.BadRequest(new { Message = "Price must be a positive number." });
                 }
+
                 var newCategory = new CategoryEntity
                 {
                     Name = categoryDto.Name,
                     Price = categoryDto.Price
                 };
+
                 db.Categories.Add(newCategory);
                 await db.SaveChangesAsync();
                 return Results.Created($"/categories/{newCategory.Id}", newCategory);
@@ -50,10 +58,8 @@ namespace Asigment1.EndPoints
             app.MapPut("/categories/{id}", async (int id, CategoryDto categoryDto, CategoryContext db) =>
             {
                 var category = await db.Categories.FindAsync(id);
-                if (category == null)
-                {
-                    return Results.NotFound(new { Message = "Cannot found that category ID in DB" });
-                }
+                if (category == null) return Results.NotFound(new { Message = "Category not found." });
+
                 if (string.IsNullOrWhiteSpace(categoryDto.Name))
                 {
                     return Results.BadRequest(new { Message = "Name is a required field." });

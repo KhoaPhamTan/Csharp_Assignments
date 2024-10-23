@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Asigment1.Entities;
+using Asigment1.Mappings; 
+using Microsoft.EntityFrameworkCore;
 
 namespace Asigment1.Data
 {
@@ -11,7 +12,7 @@ namespace Asigment1.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CategoryEntity>().HasKey(c => c.Id);
+            modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
         }
     }
 }
