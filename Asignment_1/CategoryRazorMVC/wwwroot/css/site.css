@@ -27,3 +27,54 @@ body {
 .text-center p {
   color: green; /* Màu cho đoạn văn */
 }
+.category-list {
+  list-style-type: none; /* Bỏ dấu chấm đầu dòng */
+  padding: 0; /* Bỏ khoảng cách padding */
+}
+
+.category-list li {
+  color: darkorange; /* Màu cho từng mục category */
+  margin: 10px 0; /* Thêm khoảng cách giữa các mục */
+  font-weight: bold; /* Làm cho chữ đậm hơn */
+}
+/* Tùy chỉnh cho tiêu đề bảng */
+.table thead th {
+  background-color: #007bff; /* Màu nền tiêu đề */
+  color: white; /* Màu chữ tiêu đề */
+}
+
+/* Tùy chỉnh cho các hàng trong bảng */
+.table tbody tr {
+  background-color: #f8f9fa; /* Màu nền cho hàng */
+  font-weight: bold; /* Làm cho chữ đậm */
+}
+
+.table tbody td:nth-child(1) {
+  color: rebeccapurple; /* Màu chữ cho cột giá */
+
+  font-weight: bold; /* Làm cho chữ đậm hơn */
+}
+
+.table tbody td:nth-child(2) {
+  color: red; /* Màu chữ cho cột giá */
+
+  font-weight: bold; /* Làm cho chữ đậm hơn */
+}
+
+/* Tùy chỉnh màu khi di chuột qua hàng */
+.table tbody tr:hover {
+  background-color: #e2e6ea; /* Màu nền khi di chuột */
+}
+
+/* Tùy chỉnh cho ô giá */
+.table tbody td:nth-child(3) {
+  color: green; /* Màu chữ cho cột giá */
+
+  font-weight: bold; /* Làm cho chữ đậm hơn */
+}
+/* Tùy chỉnh cho tiêu đề "Categories" */
+h1 {
+  color: #007bff; /* Màu chữ cho tiêu đề */
+  font-weight: bold; /* Làm cho chữ đậm */
+  text-align: center; /* Căn giữa tiêu đề */
+}

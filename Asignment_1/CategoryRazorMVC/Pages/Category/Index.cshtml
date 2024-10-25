@@ -1,6 +1,8 @@
 ﻿@page
 @model CategoryRazorMVC.Pages.Category.IndexModel
 
+<link rel="stylesheet" href="~/css/site.css" />
+
 <h1>Categories</h1>
 
 @if (Model.Categories == null || !Model.Categories.Any())
@@ -23,7 +25,7 @@ else
                 <tr>
                     <td>@category.Id</td>
                     <td>@category.Name</td>
-                    <td>@category.Price</td>
+                    <td>@category.Price.ToString("C")</td>
                 </tr>
             }
         </tbody>
