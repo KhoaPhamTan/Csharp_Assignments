@@ -1,22 +1,31 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
+using System.Net.Http.Json;
 
 namespace CategoryRazorMVC.Pages.Category
 {
     public class IndexModel : PageModel
     {
-        public List<CategoryDto> Categories { get; set; } = new();
+        private readonly IHttpClientFactory _clientFactory;
 
-        public void OnGet()
+        public IndexModel(IHttpClientFactory clientFactory)
         {
-            Categories = new List<CategoryDto>
-            {
-                new CategoryDto(1, "SamSung", 1200.50m),
-                new CategoryDto(2, "Nokia", 250.75m),
-                new CategoryDto(3, "Iphone", 99.99m)
-            };
+            _clientFactory = clientFactory;
+        }
+
+        public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+
+        public async Task OnGetAsync()
+        {
+            var client = _clientFactory.CreateClient("CategoryAPI");
+            var categories = await client.GetFromJsonAsync<List<CategoryDto>>("categories");
+            Categories = categories ?? new List<CategoryDto>();
         }
     }
 
-    public record CategoryDto(int Id, string Name, decimal Price);
+    public class CategoryDto
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public decimal Price { get; set; }
+    }
 }
