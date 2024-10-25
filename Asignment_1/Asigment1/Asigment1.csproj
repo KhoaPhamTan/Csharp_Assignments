@@ -23,4 +23,8 @@
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CategoryLibrary\CategoryLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

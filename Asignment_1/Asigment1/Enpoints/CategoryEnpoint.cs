@@ -1,7 +1,7 @@
 using Asigment1.Data;
-using Asigment1.DTOs;
 using Asigment1.Entities;
 using Microsoft.EntityFrameworkCore;
+using CategoryLibrary; // Thêm tham chiếu đến Razor Class Library
 
 namespace Asigment1.EndPoints
 {
@@ -11,10 +11,10 @@ namespace Asigment1.EndPoints
         {
             app.MapGet("/categories", async (CategoryContext db) =>
             {
-
                 var categoryDtos = await db.Categories
                     .Select(c => new CategoryDto(c.Id, c.Name, c.Price))
                     .ToListAsync();
+
                 if (!categoryDtos.Any())
                 {
                     return Results.NotFound(new { Message = "No records found." });

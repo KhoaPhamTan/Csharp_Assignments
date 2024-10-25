@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Thêm HttpClient
