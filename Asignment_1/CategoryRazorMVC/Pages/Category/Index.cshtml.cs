@@ -24,7 +24,6 @@
 // }
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CategoryLibrary; // Thêm sử dụng Razor Class Library
-using System.Net.Http.Json;
 
 namespace CategoryRazorMVC.Pages.Category
 {

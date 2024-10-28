@@ -1,6 +1,6 @@
 namespace Asigment1.DTOs;
 
-public record class CategoryDto
+public record class CategoryDtoRemove
 (
     int Id,
     string Name,
